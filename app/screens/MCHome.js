@@ -14,6 +14,9 @@ import PropTypes from 'prop-types';
 // importing Tab View
 import GridView from 'react-native-super-grid';
 
+//importing custom loading component
+import AnimatedLoader from './../components/customLoadingComponent.js'
+
 const styles = StyleSheet.create({
   gridView: {
     paddingTop: 25,
@@ -79,44 +82,49 @@ export default class MCHome extends Component {
         console.error(error);
       });
   }
+
   handleMicroComponentDetailsPress = (item) => {
     this.props.navigation.navigate('MicroComponentsDetails', {
       details: item,
     });
   };
 
+  renderGridViewList = ()=>
+  {
+    return(
+      <GridView
+        itemDimension={130}
+        items={this.state.data}
+        style={styles.gridView}
+        renderItem={item => (
+          <TouchableOpacity
+            style={styles.loadingContainer}
+            onPress={() => this.handleMicroComponentDetailsPress(item)}
+          >
+            <View style={[styles.itemContainer]}>
+              <Image
+                source={{uri:item.image}}
+                style={{ width: 100, height: 100, borderRadius: 50 }}
+              />
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemCreator}>{item.creator}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    );
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#a5154a" animating={this.state.loader} />
-          <Text style={styles.loadingText}>{this.state.loadingMsg}</Text>
-        </View>
+        <AnimatedLoader loadingMsg={this.state.loadingMsg}/>
       );
     }
     return (
       <ScrollView style={styles.scrollContainer}>
         <View>
-          <GridView
-            itemDimension={130}
-            items={this.state.data}
-            style={styles.gridView}
-            renderItem={item => (
-              <TouchableOpacity
-                style={styles.loadingContainer}
-                onPress={() => this.handleMicroComponentDetailsPress(item)}
-              >
-                <View style={[styles.itemContainer]}>
-                  <Image
-                    source={require('./../../images/red.jpg')}
-                    style={{ width: 100, height: 100, borderRadius: 50 }}
-                  />
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemCreator}>{item.creator}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
+          {this.renderGridViewList()}
         </View>
       </ScrollView>
     );

@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
+//importing Custom loading Component
+import AnimatedLoader from './../components/customLoadingComponent.js'
+
 const styles = StyleSheet.create({
   info: {
     color: 'black',
@@ -118,48 +121,46 @@ class Opportunities extends Component {
     });
   };
 
+  renderOpportunities = ()=>
+  {
+    return(
+      this.state.data.map((item, key) => (
+        <TouchableHighlight onPress={() => this.handleOpportunityDetailsPress(item)} key={key}>
+          <View style={styles.wrapper}>
+            <View style={styles.imageContainer}>
+              <Image resizeMode="cover" source={{ uri: item.image }} style={styles.image} />
+            </View>
+            <View style={styles.container}>
+              <View style={styles.leftSide} />
+              <View style={styles.rightSide}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{item.name}</Text>
+                </View>
+                <View>
+                  <Text style={styles.info}>Vertical: {item.vertical}</Text>
+                  <Text style={styles.info}>Proposed Value: {item.business_dollar_value}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableHighlight>
+      ))
+    );
+  }
+
   render() {
     if (this.state.isDataLoaded === false) {
       return (
-        <ImageBackground
-          style={{ width: '100%', height: '100%' }}
-          source={require('../../images/background.jpg')}
-        >
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#a5154a" animating={this.state.loader} />
-            <Text style={styles.loadingText}>{this.state.loadingMsg}</Text>
-          </View>
-        </ImageBackground>
+        <AnimatedLoader loadingMsg={this.state.loadingMsg}/>
       );
     }
 
     return (
       <ImageBackground
         style={{ width: '100%', height: '100%' }}
-        source={require('../../images/background.jpg')}
-      >
+        source={require('../../images/background.jpg')} >
         <ScrollView>
-          {this.state.data.map((item, key) => (
-            <TouchableHighlight onPress={() => this.handleOpportunityDetailsPress(item)} key={key}>
-              <View style={styles.wrapper}>
-                <View style={styles.imageContainer}>
-                  <Image resizeMode="cover" source={{ uri: item.image }} style={styles.image} />
-                </View>
-                <View style={styles.container}>
-                  <View style={styles.leftSide} />
-                  <View style={styles.rightSide}>
-                    <View style={styles.titleContainer}>
-                      <Text style={styles.title}>{item.name}</Text>
-                    </View>
-                    <View>
-                      <Text style={styles.info}>Vertical: {item.vertical}</Text>
-                      <Text style={styles.info}>Proposed Value: {item.business_dollar_value}</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-          ))}
+          {this.renderOpportunities()}
         </ScrollView>
       </ImageBackground>
     );

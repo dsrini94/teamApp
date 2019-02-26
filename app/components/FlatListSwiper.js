@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     margin: 5,
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent:'center',
   },
   image: {
     height: 80,
@@ -144,7 +145,7 @@ export default class FlatListSwiper extends  Component
       skin: 'custom',
       ignoreSilentSwitch: null,
       isBuffering: false,
-      videoTag:''
+      videoTag:require('./../../images/JourneyMap.mp4')
     }
 
     this.handleModalOpen = this.handleModalOpen.bind(this);
@@ -316,7 +317,7 @@ export default class FlatListSwiper extends  Component
   render()
   {
     return(
-      <View>
+      <View >
         <FlatList
       showsHorizontalScrollIndicator={false}
       horizontal
